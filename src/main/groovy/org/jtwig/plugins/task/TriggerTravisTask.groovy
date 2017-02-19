@@ -18,12 +18,6 @@ class TriggerTravisTask extends DefaultTask {
     public static void create (Project project) {
         project.task(TASK_NAME, type: TriggerTravisTask)
                 .dependsOn(
-                GenerateMavenPomTask.TASK_NAME,
-                GenerateJarTask.TASK_NAME,
-                GenerateJavadocJarTask.TASK_NAME,
-                GenerateSourcesJarTask.TASK_NAME,
-                GithubReleaseTask.TASK_NAME,
-                UploadBintrayTask.TASK_NAME
         );
 
     }

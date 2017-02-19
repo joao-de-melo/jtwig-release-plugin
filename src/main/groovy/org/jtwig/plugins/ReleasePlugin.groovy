@@ -26,9 +26,14 @@ public class ReleasePlugin implements Plugin<Project> {
             GitBranchTask.create(project);
             GithubReleaseTask.create(project);
             UploadBintrayTask.create(project);
-            TriggerTravisTask.create(project);
 
-            mainTask.dependsOn(TriggerTravisTask.TASK_NAME);
+            mainTask.dependsOn(
+                    GenerateMavenPomTask.TASK_NAME,
+                    GenerateJarTask.TASK_NAME,
+                    GenerateJavadocJarTask.TASK_NAME,
+                    GenerateSourcesJarTask.TASK_NAME,
+                    GithubReleaseTask.TASK_NAME,
+                    UploadBintrayTask.TASK_NAME);
         }
 
         setupDependenciesVersion(project, version);
