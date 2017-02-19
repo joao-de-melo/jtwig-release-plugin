@@ -12,6 +12,7 @@ import org.jtwig.plugins.travis.TriggerBuilderBodyService
 
 class TriggerTravisTask extends DefaultTask {
     public static final String TASK_NAME = "jtwigReleaseTriggerTravis";
+    public static final String VERSION_VARIABLE = "JTWIG_VERSION"
 
     public static void create (Project project) {
         project.task(TASK_NAME, type: TriggerTravisTask)
@@ -45,7 +46,7 @@ class TriggerTravisTask extends DefaultTask {
         TriggerBuildService service = new TriggerBuildService(
                 HttpClients.createDefault(),
                 new TriggerBuilderBodyService(
-                        extension.getVersionProperty(),
+                        VERSION_VARIABLE,
                         extension.getVersion()
                 )
         );

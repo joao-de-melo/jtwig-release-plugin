@@ -2,7 +2,6 @@ package org.jtwig.plugins
 
 import com.google.common.base.Optional
 import org.apache.commons.io.FileUtils
-import org.apache.commons.lang3.StringUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -14,9 +13,9 @@ import org.jtwig.plugins.task.*
 public class ReleasePlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
-        ReleaseExtension extension = ReleaseExtension.create(project);
-        Optional<String> version = Environment.version(extension.getVersionProperty());
+        ReleaseExtension.create(project);
 
+        Optional<String> version = Environment.version(TriggerTravisTask.VERSION_VARIABLE);
         Task mainTask = project.task(JtwigReleaseTask.TASK_NAME, type: JtwigReleaseTask);
 
         if (version.isPresent()) {
@@ -32,18 +31,18 @@ public class ReleasePlugin implements Plugin<Project> {
             mainTask.dependsOn(TriggerTravisTask.TASK_NAME);
         }
 
-        setupDependenciesVersion(project);
+        setupDependenciesVersion(project, version);
     }
 
-    private void setupDependenciesVersion(Project target) {
+    private void setupDependenciesVersion(Project target, Optional<String> version) {
         ReleaseExtension extension = ReleaseExtension.retrieve(target);
-        if (StringUtils.isNotBlank(extension.version)) {
+        if (version.isPresent()) {
             // for releases
             target.getConfigurations().all {
                 resolutionStrategy {
                     eachDependency { DependencyResolveDetails details ->
                         if (details.requested.group == extension.group) {
-                            details.useVersion extension.version
+                            details.useVersion version.get()
                         }
                     }
                 }
@@ -51,12 +50,12 @@ public class ReleasePlugin implements Plugin<Project> {
         } else {
             // for branches
             if (GitBranchTask.versionFile(target.getRootDir()).exists()) {
-                String version = FileUtils.readFileToString(GitBranchTask.versionFile(target.getRootDir())).trim();
+                String fileVersion = FileUtils.readFileToString(GitBranchTask.versionFile(target.getRootDir())).trim();
                 target.getConfigurations().all {
                     resolutionStrategy {
                         eachDependency { DependencyResolveDetails details ->
                             if (details.requested.group == extension.group) {
-                                details.useVersion version
+                                details.useVersion fileVersion
                             }
                         }
                     }

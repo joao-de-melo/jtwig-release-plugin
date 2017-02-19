@@ -15,7 +15,6 @@ public class ReleaseExtension {
     String version;
     String group = "org.jtwig";
     String destinationDir = "jtwig-release";
-    String versionProperty = "jtwigVersion";
 
     ReleaseGitExtension git;
     ReleaseGithubExtension github;
