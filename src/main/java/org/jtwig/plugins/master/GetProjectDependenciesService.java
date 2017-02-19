@@ -18,16 +18,18 @@ public class GetProjectDependenciesService {
     private final Pattern PATTERN = Pattern.compile("org\\.jtwig:([^:]+)");
     private final String baseUrl;
     private final HttpClient httpClient;
+    private final List<String> ignoreList;
 
-    public GetProjectDependenciesService(String baseUrl) {
+    public GetProjectDependenciesService(String baseUrl, List<String> ignoreList) {
         this(baseUrl, HttpClients.custom()
                 .setSSLHostnameVerifier(new NoopHostnameVerifier())
-                .build());
+                .build(), ignoreList);
     }
 
-    public GetProjectDependenciesService(String baseUrl, HttpClient httpClient) {
+    public GetProjectDependenciesService(String baseUrl, HttpClient httpClient, List<String> ignoreList) {
         this.baseUrl = baseUrl;
         this.httpClient = httpClient;
+        this.ignoreList = ignoreList;
     }
 
     public List<String> dependencies (String project) {
@@ -42,7 +44,9 @@ public class GetProjectDependenciesService {
             String content = ResponseUtils.getContent(response);
             Matcher matcher = PATTERN.matcher(content);
             while (matcher.find()) {
-                result.add(matcher.group(1));
+                if (!ignoreList.contains(matcher.group(1))) {
+                    result.add(matcher.group(1));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
