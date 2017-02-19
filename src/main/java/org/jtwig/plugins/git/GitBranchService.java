@@ -23,13 +23,14 @@ public class GitBranchService {
                 .setDirectory(request.getDirectory())
                 .setURI(UrlBuilder.url(request.getBaseUrl())
                         .addToPath(request.getOwner())
-                        .addToPath(request.getRepository()+"")
+                        .addToPath(request.getRepository()+".git")
                         .build())
-                .setRemote("origin")
                 .setCredentialsProvider(credentialsProvider)
                 .call();
 
         FileUtils.writeStringToFile(new File(request.getDirectory(), request.getVersionFileName()), request.getVersion());
+
+        git.add().addFilepattern(request.getVersionFileName()).call();
 
         git.checkout()
                 .setCreateBranch(true)
