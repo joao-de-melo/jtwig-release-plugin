@@ -13,12 +13,12 @@ public class TriggerBuilderBodyService {
 
     public JSONObject generate (TriggerBuildRequest request) {
         return new JSONObject()
-                .append("request",
+                .put("request",
                         new JSONObject()
-                                .append("message", String.format("Triggered release from downstream project %s", request.getParentProject()))
-                                .append("config", new JSONObject()
-                                        .append("env", new JSONObject()
-                                                .append(versionVariable, version)
+                                .put("message", String.format("Triggered release from downstream project %s", request.getParentProject()))
+                                .put("config", new JSONObject()
+                                        .put("env", new JSONObject()
+                                                .put(versionVariable, version)
                                         )
                                 )
                 );

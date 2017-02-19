@@ -5,6 +5,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
+import org.jtwig.plugins.util.UrlBuilder;
 
 public class TriggerBuildService {
     private final HttpClient httpClient;
@@ -20,7 +21,11 @@ public class TriggerBuildService {
         try {
             JSONObject jsonObject = bodyService.generate(request);
             StringEntity entity = new StringEntity(jsonObject.toString());
-            String url = String.format("%s/repo/%s/requests", request.getBaseUrl(), request.getProject());
+            String url = UrlBuilder.url(request.getBaseUrl())
+                    .addToPath("repo")
+                    .addToPathEscaped(request.getProject())
+                    .addToPath("requests")
+                    .build();
             HttpPost post = new HttpPost(url);
             post.addHeader("Travis-API-Version", "3");
             post.addHeader("Accept", "application/json");
