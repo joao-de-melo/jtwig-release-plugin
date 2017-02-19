@@ -15,7 +15,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
     }
 }
 
@@ -38,10 +38,23 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
+publishing {
+    publications {
+        Publication(MavenPublication) {
+            from components.java
+            groupId project.group
+            artifactId project.name
+            version project.version
+        }
+    }
+}
+
 bintray {
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
-
+    publications = ['Publication']
+    publish = true
+    override = true
     pkg {
         repo = 'maven'
         name = project.name
