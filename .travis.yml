@@ -7,6 +7,6 @@ env:
 
 after_success:
  - |
-     if [[ ("$TRAVIS_TAG" != "") ]] ; then
+     if [ ! -z $TRAVIS_TAG ] ; then
        gradle bintrayUpload
      fi
