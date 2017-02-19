@@ -3,7 +3,7 @@ package org.jtwig.plugins.bintray.services;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.ByteArrayEntity;
 import org.json.JSONObject;
 import org.jtwig.plugins.bintray.http.BintrayHttpClient;
 import org.jtwig.plugins.bintray.model.BintrayPackage;
@@ -11,7 +11,6 @@ import org.jtwig.plugins.bintray.services.model.CreateVersionRequest;
 import org.jtwig.plugins.util.ResponseUtils;
 import org.jtwig.plugins.util.UrlBuilder;
 
-import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -36,26 +35,10 @@ public class VersionsService {
                 .put("released", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ").format(new Date()))
                 .toString();
 
-        post.setEntity(new InputStreamEntity(new ByteArrayInputStream(content.getBytes())));
+        post.setEntity(new ByteArrayEntity(content.getBytes()));
         post.setHeader("Content-Type", "application/json");
         HttpResponse httpResponse = httpClient.execute(post);
         return httpResponse.getStatusLine().getStatusCode() == 201;
-    }
-
-    public String getLatestVersion (String baseUrl, BintrayPackage repository) {
-        String url = UrlBuilder.url(baseUrl)
-                .addToPath("packages")
-                .addToPath(repository.getPath())
-                .addToPath("versions")
-                .addToPath("_latest")
-                .build();
-
-        HttpGet get = new HttpGet(url);
-        HttpResponse result = httpClient.execute(get);
-
-        String content = ResponseUtils.getContent(result);
-        return new JSONObject(content)
-                .getString("name");
     }
 
     public boolean versionExists (String baseUrl, BintrayPackage repository, String version) {

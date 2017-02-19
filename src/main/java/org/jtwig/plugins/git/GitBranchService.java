@@ -29,7 +29,7 @@ public class GitBranchService {
                 .setCredentialsProvider(credentialsProvider)
                 .call();
 
-        FileUtils.write(new File(git.getRepository().getDirectory(), request.getVersionFileName()), request.getVersion());
+        FileUtils.writeStringToFile(new File(git.getRepository().getDirectory(), request.getVersionFileName()), request.getVersion());
 
         git.checkout()
                 .setCreateBranch(true)

@@ -3,7 +3,7 @@ package org.jtwig.plugins.bintray.services;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.ByteArrayEntity;
 import org.json.JSONObject;
 import org.jtwig.plugins.bintray.http.BintrayHttpClient;
 import org.jtwig.plugins.bintray.model.BintrayPackage;
@@ -12,7 +12,6 @@ import org.jtwig.plugins.bintray.services.model.CreatePackageRequest;
 import org.jtwig.plugins.util.ResponseUtils;
 import org.jtwig.plugins.util.UrlBuilder;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class PackagesService {
                 .put("public_download_numbers", request.isPublicDownloadNumbers())
                 .put("public_stats", request.isPublicStats())
                 .toString();
-        httpPost.setEntity(new InputStreamEntity(new ByteArrayInputStream(content.getBytes())));
+        httpPost.setEntity(new ByteArrayEntity(content.getBytes()));
 
         HttpResponse response = httpClient.execute(httpPost);
 

@@ -1,8 +1,9 @@
 package org.jtwig.plugins.bintray.services;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.ByteArrayEntity;
 import org.jtwig.plugins.bintray.http.BintrayHttpClient;
 import org.jtwig.plugins.bintray.services.model.UploadArtifactRequest;
 import org.jtwig.plugins.util.UrlBuilder;
@@ -35,7 +36,7 @@ public class UploadsService {
 
         httpPut.setHeader("Content-Type", "*/*");
         try (InputStream inputStream = new FileInputStream(request.getFile())) {
-            httpPut.setEntity(new InputStreamEntity(inputStream));
+            httpPut.setEntity(new ByteArrayEntity(IOUtils.toByteArray(inputStream)));
             HttpResponse response = httpClient.execute(httpPut);
             inputStream.close();
             return response.getStatusLine().getStatusCode() == 201;
