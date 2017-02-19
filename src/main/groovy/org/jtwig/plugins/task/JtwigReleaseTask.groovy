@@ -2,7 +2,6 @@ package org.jtwig.plugins.task
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import org.jtwig.plugins.config.ReleaseExtension
 import org.jtwig.plugins.environment.Environment
 
 class JtwigReleaseTask extends DefaultTask {
@@ -21,8 +20,7 @@ class JtwigReleaseTask extends DefaultTask {
 
     @TaskAction
     public void release () {
-        ReleaseExtension extension = ReleaseExtension.retrieve(getProject())
-        if (Environment.version(extension.getVersionProperty()).isPresent()) {
+        if (Environment.version(TriggerTravisTask.VERSION_VARIABLE).isPresent()) {
             println "Released"
         } else {
             println "Not released"
