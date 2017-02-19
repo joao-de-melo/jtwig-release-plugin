@@ -1,7 +1,7 @@
 package org.jtwig.plugins.task
 
 import org.gradle.api.Project
-import org.gradle.jvm.tasks.Jar
+import org.gradle.api.tasks.bundling.Jar
 import org.jtwig.plugins.util.DestinationDir
 import org.jtwig.plugins.util.Version
 
