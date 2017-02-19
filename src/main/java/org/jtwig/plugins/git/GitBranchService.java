@@ -29,14 +29,14 @@ public class GitBranchService {
                 .setCredentialsProvider(credentialsProvider)
                 .call();
 
-        FileUtils.writeStringToFile(new File(git.getRepository().getDirectory(), request.getVersionFileName()), request.getVersion());
+        FileUtils.writeStringToFile(new File(request.getDirectory(), request.getVersionFileName()), request.getVersion());
 
         git.checkout()
                 .setCreateBranch(true)
                 .setName(request.getVersion())
                 .call();
 
-        git.add().addFilepattern("jtwig.version").call();
+        git.add().addFilepattern(request.getVersionFileName()).call();
 
         git.commit()
                 .setMessage("Branch for release "+request.getVersion())
