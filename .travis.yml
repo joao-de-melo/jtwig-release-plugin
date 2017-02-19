@@ -6,6 +6,7 @@ env:
   TERM: dumb
 
 after_success:
+ - echo $TRAVIS_TAG
  - |
      if [ ! -z $TRAVIS_TAG ] ; then
        gradle bintrayUpload
