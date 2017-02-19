@@ -1,0 +1,12 @@
+language: java
+jdk:
+  - oraclejdk7
+
+env:
+  TERM: dumb
+
+after_success:
+ - |
+     if [[ ("$TRAVIS_TAG" != "") ]] ; then
+       gradle bintrayUpload
+     fi

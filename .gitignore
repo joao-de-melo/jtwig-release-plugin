@@ -1,0 +1,13 @@
+# Gradle
+.gradle
+gradlew
+gradlew.bat
+gradle/wrapper
+
+# Build
+classes
+build
+
+# IDE
+.idea
+*.iml
