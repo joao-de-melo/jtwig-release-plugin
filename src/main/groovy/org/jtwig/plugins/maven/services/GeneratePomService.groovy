@@ -3,21 +3,20 @@ package org.jtwig.plugins.maven.services
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ResolvedDependency
 import org.gradle.api.artifacts.UnknownConfigurationException
-import org.jtwig.plugins.config.ReleaseExtension
 import org.jtwig.plugins.config.ReleaseMavenExtension
+import org.jtwig.plugins.environment.Environment
 import org.jtwig.plugins.maven.model.MavenDependency
 import org.jtwig.plugins.maven.model.PomFile
-
+import org.jtwig.plugins.task.TriggerTravisTask
 
 class GeneratePomService {
     public PomFile generatePom (Project project) {
-        ReleaseExtension releaseExtension = ReleaseExtension.retrieve(project);
         ReleaseMavenExtension releaseMavenExtension = ReleaseMavenExtension.retrieve(project);
         List<MavenDependency> dependencies = new ArrayList<>();
 
         String groupId = (String) project.getGroup();
         String artifactId = project.getName();
-        String version = releaseExtension.getVersion();
+        String version = Environment.version(TriggerTravisTask.VERSION_VARIABLE).get();
 
         for (Map.Entry<String, String> entry : releaseMavenExtension.getConfigurationsScope().entrySet()) {
             try {

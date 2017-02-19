@@ -6,6 +6,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
 import org.jtwig.plugins.config.ReleaseExtension
+import org.jtwig.plugins.environment.Environment
 import org.jtwig.plugins.github.CreateReleaseRequest
 import org.jtwig.plugins.github.CreateReleaseService
 import org.jtwig.plugins.github.GithubRelease
@@ -38,10 +39,11 @@ class GithubReleaseTask extends DefaultTask {
         if (StringUtils.isBlank(extension.getGithub().getToken())) throw new RuntimeException(String.format("%s.github.token is undefined", ReleaseExtension.EXTENSION));
 
         GithubUser githubUser = new GithubUser(extension.getGithub().getUsername(), extension.getGithub().getToken());
+        String version = Environment.version(TriggerTravisTask.VERSION_VARIABLE).get()
         GithubRelease githubRelease = new GithubRelease(
                 extension.getGithub().getOwner(),
                 extension.getGithub().getRepository(),
-                extension.getVersion());
+                version);
 
         CreateReleaseService createReleaseService = new CreateReleaseService(HttpClients.createDefault());
 
@@ -49,9 +51,9 @@ class GithubReleaseTask extends DefaultTask {
             createReleaseService.release(extension.getGithub().getApiBaseUrl(), new CreateReleaseRequest(
                     githubUser,
                     githubRelease,
-                    extension.getVersion(),
-                    "Release "+extension.getVersion(),
-                    extension.getVersion()
+                    version,
+                    "Release "+version,
+                    version
             ));
         }
     }

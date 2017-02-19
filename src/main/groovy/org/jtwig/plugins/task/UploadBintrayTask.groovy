@@ -19,6 +19,7 @@ import org.jtwig.plugins.bintray.services.model.CreateVersionRequest
 import org.jtwig.plugins.bintray.services.model.UploadArtifactRequest
 import org.jtwig.plugins.config.ReleaseBintrayExtension
 import org.jtwig.plugins.config.ReleaseExtension
+import org.jtwig.plugins.environment.Environment
 import org.jtwig.plugins.util.ProducedFile
 
 class UploadBintrayTask extends DefaultTask {
@@ -80,13 +81,14 @@ class UploadBintrayTask extends DefaultTask {
             ));
         }
 
+        String version = Environment.version(TriggerTravisTask.VERSION_VARIABLE).get();
         VersionsService versionsService = new VersionsService(httpClient);
-        BintrayPackageVersion packageVersion = new BintrayPackageVersion(bintrayPackage, releaseExtension.getVersion())
+        BintrayPackageVersion packageVersion = new BintrayPackageVersion(bintrayPackage, version)
 
-        if (!versionsService.versionExists(baseUrl, bintrayPackage, releaseExtension.getVersion())) {
+        if (!versionsService.versionExists(baseUrl, bintrayPackage, version)) {
             versionsService.create(baseUrl, new CreateVersionRequest(
                     packageVersion,
-                    "Version " + releaseExtension.version
+                    "Version " + version
             ));
         }
 

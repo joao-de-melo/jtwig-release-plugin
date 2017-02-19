@@ -1,8 +1,8 @@
 package org.jtwig.plugins.util
 
 import org.gradle.api.Project
-import org.jtwig.plugins.config.ReleaseExtension
-
+import org.jtwig.plugins.environment.Environment
+import org.jtwig.plugins.task.TriggerTravisTask
 
 public enum ProducedFile {
     JAR("%s-%s.jar"),
@@ -17,9 +17,9 @@ public enum ProducedFile {
     }
 
     public File file (Project project) {
-        ReleaseExtension releaseExtension = ReleaseExtension.retrieve(project);
+        String version = Environment.version(TriggerTravisTask.VERSION_VARIABLE).get();
         File destinationDir = DestinationDir.destinationDir(project);
-        return new File(destinationDir, fileName(project, releaseExtension.getVersion()));
+        return new File(destinationDir, fileName(project, version));
     }
 
     private String fileName(Project project, String version) {
@@ -27,9 +27,9 @@ public enum ProducedFile {
     }
 
     public String bintrayPath(Project project) {
-        ReleaseExtension releaseExtension = ReleaseExtension.retrieve(project);
+        String version = Environment.version(TriggerTravisTask.VERSION_VARIABLE).get();
         return String.format("%s/%s/%s/%s",
                 project.group.toString().replace(".", "/"),
-                project.name, releaseExtension.getVersion(), fileName(project, releaseExtension.getVersion()));
+                project.name, version, fileName(project, version));
     }
 }

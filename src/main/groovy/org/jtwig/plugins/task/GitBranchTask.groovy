@@ -6,6 +6,7 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
 import org.jtwig.plugins.config.ReleaseExtension
 import org.jtwig.plugins.config.ReleaseGitExtension
+import org.jtwig.plugins.environment.Environment
 import org.jtwig.plugins.git.GitBranchRequest
 import org.jtwig.plugins.git.GitBranchService
 
@@ -48,7 +49,7 @@ class GitBranchTask extends DefaultTask {
                         gitExtension.getBaseUrl(),
                         gitExtension.getOwner(),
                         gitExtension.getRepository(),
-                        extension.getVersion(),
+                        Environment.version(TriggerTravisTask.VERSION_VARIABLE).get(),
                         VERSION_FILE
                 )
         );
