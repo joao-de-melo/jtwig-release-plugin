@@ -36,9 +36,8 @@ public class GitBranchService {
                 .setName(request.getVersion())
                 .call();
 
-        git.add().addFilepattern(request.getVersionFileName()).call();
-
         git.commit()
+                .setAll(true)
                 .setMessage("Branch for release "+request.getVersion())
                 .setAuthor("Jtwig Release Plugin", "bot@jtwig.org")
                 .call();
