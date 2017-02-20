@@ -24,12 +24,14 @@ class GeneratePomService {
                         .getConfigurations().getByName(entry.getKey())
                         .getResolvedConfiguration().getFirstLevelModuleDependencies();
                 for (ResolvedDependency artifact : artifacts) {
-                    dependencies.add(new MavenDependency(
-                            artifact.getModuleGroup(),
-                            artifact.getModuleName(),
-                            artifact.getModuleVersion(),
-                            entry.getValue()
-                    ));
+                    if (!containsDependency(dependencies, artifact)) {
+                        dependencies.add(new MavenDependency(
+                                artifact.getModuleGroup(),
+                                artifact.getModuleName(),
+                                artifact.getModuleVersion(),
+                                entry.getValue()
+                        ));
+                    }
                 }
             } catch (UnknownConfigurationException e) {
                 // swallow
@@ -42,5 +44,16 @@ class GeneratePomService {
                 version,
                 dependencies
         );
+    }
+
+    public boolean containsDependency (List<MavenDependency> dependencies, ResolvedDependency dependency) {
+        for (MavenDependency dep : dependencies) {
+            if (dep.getGroupId() == dependency.getModuleGroup()) {
+                if (dep.getArtifactId() == dependency.getModuleName()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
