@@ -37,10 +37,6 @@ public class WritePomXmlService {
             writer.writeCharacters(request.getArtifactId());
             writer.writeEndElement();
 
-            writer.writeStartElement("artifactId");
-            writer.writeCharacters(request.getArtifactId());
-            writer.writeEndElement();
-
             writer.writeStartElement("version");
             writer.writeCharacters(request.getVersion());
             writer.writeEndElement();
